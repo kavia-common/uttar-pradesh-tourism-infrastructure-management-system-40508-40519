@@ -1,10 +1,11 @@
 #!/bin/bash
 
 # Minimal PostgreSQL startup script with full paths
-DB_NAME="myapp"
-DB_USER="appuser"
-DB_PASSWORD="dbuser123"
-DB_PORT="5000"
+# Uses environment variables with sensible defaults; do not hardcode in code.
+DB_NAME="${POSTGRES_DB:-myapp}"
+DB_USER="${POSTGRES_USER:-appuser}"
+DB_PASSWORD="${POSTGRES_PASSWORD:-dbuser123}"
+DB_PORT="${POSTGRES_PORT:-5001}"
 
 echo "Starting PostgreSQL setup..."
 
@@ -135,11 +136,12 @@ echo "Connection string saved to db_connection.txt"
 
 # Save environment variables to a file
 cat > db_visualizer/postgres.env << EOF
-export POSTGRES_URL="postgresql://localhost:${DB_PORT}/${DB_NAME}"
+export POSTGRES_HOST="localhost"
+export POSTGRES_PORT="${DB_PORT}"
+export POSTGRES_DB="${DB_NAME}"
 export POSTGRES_USER="${DB_USER}"
 export POSTGRES_PASSWORD="${DB_PASSWORD}"
-export POSTGRES_DB="${DB_NAME}"
-export POSTGRES_PORT="${DB_PORT}"
+export POSTGRES_URL="postgresql://\${POSTGRES_HOST}:\${POSTGRES_PORT}/\${POSTGRES_DB}"
 EOF
 
 echo "PostgreSQL setup complete!"
